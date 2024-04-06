@@ -1,0 +1,95 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.navbar {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 0;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar-user {
+  float: right;
+}
+
+.username {
+  margin-right: 10px;
+}
+
+.logout-button {
+  background-color: #dc3545;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.logout-button:hover {
+  background-color: #c82333;
+}
+
+.blog-post {
+  margin-bottom: 30px;
+  border: 1px solid #ddd;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.post-title {
+  margin-top: 0;
+}
+
+.tags {
+  margin-top: 10px;
+}
+
+.tag {
+  position: relative;
+  display: inline-block;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  background-color: #007bff;
+  color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+}
+
+.tag-actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  visibility: hidden;
+}
+
+.tag:hover .tag-actions {
+  visibility: visible;
+}
+
+.add-tag-button {
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 3px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.add-tag-button:hover {
+  background-color: #218838;
+}

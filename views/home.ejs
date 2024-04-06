@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Blog Posts</title>
+    <!-- Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blog</a>
+        <div class="navbar-collapse">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+              <span class="navbar-text mr-2"
+                >Welcome, <%= currentUser.username %>
+              </span>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-danger" href="/auth/logout" id="logoutButton"
+                >Logout</a
+              >
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <% if (typeof error !== 'undefined') { %>
+      <div class="alert alert-danger" role="alert"><%= error %></div>
+      <% } %>
+      <% if (typeof success !== 'undefined') { %>
+        <div class="alert alert-success" role="alert"><%= success %></div>
+        <% } %>
+    <!-- Button to trigger modal -->
+    <button
+      type="button"
+      class="btn btn-primary"
+      data-toggle="modal"
+      data-target="#createPostModal"
+    >
+      Create New Post
+    </button>
+    <div class="container mt-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Search and Filter</h5>
+          <form id="searchForm" method="post" action="/post/search">
+            <div class="form-row">
+              <!-- Date Range Filter -->
+              <div class="col-md-4 mb-3">
+                <label for="startDate">Start Date</label>
+                <input type="date" class="form-control" name="startDate" id="startDate">
+              </div>
+              <div class="col-md-4 mb-3">
+                <label for="endDate">End Date</label>
+                <input type="date" class="form-control" name="endDate" id="endDate">
+              </div>
+              <!-- Author Filter -->
+              <div class="col-md-4 mb-3">
+                <label for="author">Author</label>
+                <select class="form-control" id="author" name="user">
+                  <option value="">Select Author</option>
+                  <% authors.forEach(author => { %>
+                  <option value="<%=author.id%>"><%=author.username%></option>
+                  
+                  <%});%>
+                </select>
+              </div>
+            </div>
+            <!-- Tags Filter -->
+            <div class="form-group">
+              <label for="tags">Tags</label>
+              <select multiple class="form-control" id="tags" name="selectedTags">
+                <% tags.forEach(tag => { %>
+                  <option value="<%=tag.id%>"><%=tag.name%></option>
+                  
+                  <%});%>
+              </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="createPostModal"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="createPostModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="createPostModalLabel">
+              Create New Post
+            </h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="createPostForm" action="/posts" method="POST">
+              <div class="form-group">
+                <label for="postTitle">Title</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="postTitle"
+                  name="title"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="postContent">Content</label>
+                <textarea
+                  class="form-control"
+                  id="postContent"
+                  name="content"
+                  rows="5"
+                  required
+                ></textarea>
+              </div>
+              <div class="form-group">
+                <label for="tags">Labels</label>
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="tagInput"
+                    list="tagSuggestions"
+                  />
+                  <datalist id="tagSuggestions"> </datalist>
+
+                  <div class="input-group-append">
+                    <button class="btn btn-primary" type="button" id="addtag">
+                      Add Tag
+                    </button>
+                  </div>
+                </div>
+                <p class="text-sm text-danger" id="tag-error"></p>
+              </div>
+
+              <ul id="tagList" class="list-unstyled"></ul>
+              <button type="submit" class="btn btn-primary">Create</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container mt-5">
+      <h1>Blog Posts</h1>
+      <div class="blog-posts">
+        <% posts.forEach(post => { %>
+        <div class="blog-post border m-2 p-5">
+          <span class="badge badge-secondary top-0 end-0 p-1">
+            Author: <%= post.User.username %>
+          </span>
+          <h2 class="post-title"><%= post.title %></h2>
+          <p class="post-content"><%= post.content %></p>
+          <div class="row">
+            <div class="col">
+              <div class="tags">
+                <% post.Tags.forEach(tag => { %>
+                <span class="badge badge-primary p-1"
+                  ><%= tag.name %><% if (post.UserId === currentUser.id ||
+                  currentUser.userType === 'Admin') { %>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="currentColor"
+                    class="bi bi-pen edit-tag-icon"
+                    viewBox="0 0 16 16"
+                    data-toggle="modal"
+                    data-target="#editTagModal"
+                    data-tag-id="<%= tag.id %>"
+                    data-tag-name="<%= tag.name %>"
+                    data-post-id="<%= post.id %>"
+                  >
+                    <path
+                      d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"
+                    />
+                  </svg>
+                  <a class="link-danger" href="/post/<%= post.id %>/tags/delete/<%= tag.id %>">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="16"
+                    height="16"
+                    fill="white"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                    />
+                    <path
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                    />
+                  </svg>
+                </a>
+                  <% } %>
+                </span>
+                <% }); %>
+              </div>
+            </div>
+          </div>
+          
+          <% if (post.UserId === currentUser.id || currentUser.userType ===
+          'Admin'){%>
+          <button
+            class="btn btn-success mt-2"
+            id="openModalButton"
+            data-toggle="modal"
+            data-target="#addTagModal<%= post.id %>"
+          >
+            Add Tag
+          </button>
+          <%}%>
+          <p class="post-date position-absolute bottom-0 end-0 mb-3"> <!-- Add position-absolute, bottom-0, end-0, and mb-3 classes -->
+            Created on: <%= post.createdAt.toDateString() %>
+          </p>  
+        </div>
+        
+        <% }); %>
+      </div>
+    </div>
+
+    <!-- Add Tag Modal -->
+    <% posts.forEach(post => { %>
+    <div
+      class="modal fade"
+      id="addTagModal<%= post.id %>"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="addTagModalLabel<%= post.id %>"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addTagModalLabel<%= post.id %>"></h5>Add Tag</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action="/post/<%= post.id %>/tags/add" method="POST">
+              <div class="form-group">
+                <label for="newTagName">Tag Name:</label>
+                <input type="text" class="form-control" id="tagName<%= post.id %>" name="tagName" required>
+              </div>
+              <button type="submit" class="btn btn-primary">
+                Add
+              </button>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Close
+            </button>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+    <% }); %>
+
+    <!-- edit tag-->
+    <!-- Edit Tag Modal -->
+<div
+class="modal fade"
+id="editTagModal"
+tabindex="-1"
+role="dialog"
+aria-labelledby="editTagModalLabel"
+aria-hidden="true"
+>
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title" id="editTagModalLabel">Edit Tag</h5>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form id="editTagForm" action="" method="post">
+        <div class="form-group">
+          <label for="editTagName">Tag Name:</label>
+          <input
+            type="text"
+            class="form-control"
+            id="editTagName"
+            name="tagName"
+            required
+          >
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Update
+        </button>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-secondary"
+        data-dismiss="modal"
+      >
+        Close
+      </button>
+      
+    </div>
+  </div>
+</div>
+</div>
+
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+    <script
+      src="https://code.jquery.com/jquery-3.7.1.min.js"
+      integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo="
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>

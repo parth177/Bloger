@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login and Signup</title>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Blog</a>
+        <div class="navbar-collapse"></div>
+      </div>
+    </nav>
+    <% if (typeof error !== 'undefined') { %>
+    <div class="alert alert-danger" role="alert"><%= error %></div>
+    <% } %>
+    <div
+      class="d-flex align-items-center justify-content-center"
+      style="height: 100vh"
+    >
+      <div class="container">
+        <div class="row">
+          <!-- Login Form -->
+          <div class="col-md-6">
+            <div class="card form-container">
+              <div class="card-body">
+                <h5 class="card-title">Login</h5>
+                <form action="/auth/login" method="POST">
+                  <div class="form-group">
+                    <label for="login-username">Username:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="login-username"
+                      name="username"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="login-password">Password:</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="login-password"
+                      name="password"
+                      required
+                    />
+                  </div>
+                  <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+              </div>
+            </div>
+          </div>
+
+          <!-- Signup Form -->
+          <div class="col-md-6">
+            <!-- Signup Form -->
+            <div class="card form-container">
+              <div class="card-body">
+                <h5 class="card-title">Signup</h5>
+                <form action="/auth/signup" method="POST">
+                  <div class="form-group">
+                    <label for="signup-username">Username:</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="signup-username"
+                      name="username"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="signup-user-type">User Type:</label>
+                    <select
+                      class="form-control"
+                      id="signup-user-type"
+                      name="userType"
+                    >
+                      <option value="User">User</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label for="signup-password">Password:</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="signup-password"
+                      name="password"
+                      required
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="signup-password">Confirm Password:</label>
+                    <input
+                      type="password"
+                      class="form-control"
+                      id="signup-password"
+                      name="confirmPassword"
+                      required
+                    />
+                  </div>
+
+                  <button type="submit" class="btn btn-primary">Signup</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
