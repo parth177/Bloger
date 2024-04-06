@@ -1,16 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { authenticateToken } = require('../../middleware/authenticate');
-
-// Middleware to authenticate user before accessing protected routes
-router.use(authenticateToken);
+const postController = require('../../controllers/Api/postController');
 
 // Protected route - create a new post
-router.post('/posts/create', (req, res) => {
-  // Authenticated user's ID is available in req.userId
-  const userId = req.userId;
-
-  // Add logic to create a new post using userId
-});
+router.post('/create', postController.create);
+router.post('/:postId/tags', postController.tagAdd);
+router.post('/:postId/tags/:tagId', postController.tagEdit);
+router.post('/tag/delete', postController.tagDel);
+router.post('/serch', postController.tagDel);
 
 module.exports = router;

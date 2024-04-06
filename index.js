@@ -7,20 +7,23 @@ const session = require('express-session');
 require('./models/association');
 const bodyParser = require('body-parser');
 const passport = require('passport');
+
 const LocalStrategy = require('passport-local').Strategy;
 const passpostLocal = require('./config/passport-local');
 // Handle POST request to create a new pos
 
-const expressLayouts = require('express-ejs-layouts');
 const port = 8000;
 const app = express();
-app.use(express.static(__dirname + '/public'));
-
 app.set('view engine', 'ejs');
 app.set('views', './views');
-app.use(express.static('assets'));
+
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(__dirname + '/public'));
+
+app.use(express.static('assets'));
+
 app.use(
   session({
     secret: 'secret',
